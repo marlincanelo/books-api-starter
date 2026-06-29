@@ -1,6 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const db = require('./db');
+
 
 // TODO: Workshop Part 1: import your db connection from ./db once it's wired up.
 // TODO: Workshop Part 2: import your Book model from ./models/Book once it's defined.
@@ -142,6 +144,13 @@ async function startApp() {
   // TODO: Workshop Part 3: this is where your table gets created from the Book
   // model. Call the sync method on your db connection and await it — the
   // table must exist before app.listen lets any request in.
+
+
+
+db.authenticate().then(() => console.log("DB connected")).catch(console.error)
+
+
+
 
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
