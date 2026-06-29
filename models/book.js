@@ -12,7 +12,7 @@ const db = require('../db')
 //   genre          STRING
 //   publishedYear  INTEGER
 //   available      BOOLEAN  defaults to true
-const Book = dbConnection.define('book', {
+const Book = db.define('book', {
     title: {
         type: DataTypes.STRING,
         allowNull: false
@@ -33,6 +33,10 @@ const Book = dbConnection.define('book', {
     }
 })
 
+// you didn't define an id field anywhere in the table above.
+//  Where does it come from, and what does it default to?
+
+// id is automaric, no need to add
 
 
 module.exports = Book

@@ -2,7 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const db = require('./db');
-
+const Book = require('./models/Book')
 
 // TODO: Workshop Part 1: import your db connection from ./db once it's wired up.
 // TODO: Workshop Part 2: import your Book model from ./models/Book once it's defined.
@@ -149,7 +149,8 @@ async function startApp() {
 
 db.authenticate().then(() => console.log("DB connected")).catch(console.error)
 
-
+//from database connection, create the tables
+db.sync()
 
 
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
