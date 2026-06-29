@@ -1,5 +1,9 @@
-const { DataTypes } = require('sequelize');
-const dbConnection = require('../db')
+// BOOK MODEL
+
+
+const { Sequelize, DataTypes } = require('sequelize');
+const db = require('../db')
+
 
 // TODO: Workshop Part 2: add one key per field below, each set to a DataTypes type
 // (and allowNull/defaultValue where noted). id is created automatically.
@@ -9,7 +13,24 @@ const dbConnection = require('../db')
 //   publishedYear  INTEGER
 //   available      BOOLEAN  defaults to true
 const Book = dbConnection.define('book', {
-
+    title: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    author: {
+        type: DataTypes.STRING,
+        //makes require
+        allowNull: false
+    },
+    genre: {
+        type: DataTypes.STRING
+    },
+    publishedYear:  {
+        type: DataTypes.INTEGER
+    },
+    available: {
+        type: DataTypes.BOOLEAN
+    }
 })
 
 
