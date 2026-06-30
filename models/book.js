@@ -29,7 +29,8 @@ const Book = db.define('book', {
         type: DataTypes.INTEGER
     },
     available: {
-        type: DataTypes.BOOLEAN
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
     }
 })
 

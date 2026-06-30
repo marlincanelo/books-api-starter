@@ -2,7 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const db = require('./db');
-const Book = require('./models/Book')
+const {Book, Review} = require('./models')
 
 // TODO: Workshop Part 1: import your db connection from ./db once it's wired up.
 // TODO: Workshop Part 2: import your Book model from ./models/Book once it's defined.
@@ -15,16 +15,16 @@ app.use(express.json()); // lets the server read JSON sent in a request body (re
 app.use(morgan("dev")); // logs method + url for every request
 app.use(cors()); // allows a future frontend (different origin) to call this API
 
-// in-memory data ------------------------------------
-let books = [
-  { id: 1, title: "The Pragmatic Programmer", author: "David Thomas", genre: "Tech", available: true },
-  { id: 2, title: "Educated", author: "Tara Westover", genre: "Memoir", available: true },
-  { id: 3, title: "Dune", author: "Frank Herbert", genre: "Sci-Fi", available: false },
-  { id: 4, title: "Sapiens", author: "Yuval Noah Harari", genre: "History", available: true },
-  { id: 5, title: "The Alchemist", author: "Paulo Coelho", genre: "Fiction", available: true },
-];
+// // in-memory data ------------------------------------
+// let books = [
+//   { id: 1, title: "The Pragmatic Programmer", author: "David Thomas", genre: "Tech", available: true },
+//   { id: 2, title: "Educated", author: "Tara Westover", genre: "Memoir", available: true },
+//   { id: 3, title: "Dune", author: "Frank Herbert", genre: "Sci-Fi", available: false },
+//   { id: 4, title: "Sapiens", author: "Yuval Noah Harari", genre: "History", available: true },
+//   { id: 5, title: "The Alchemist", author: "Paulo Coelho", genre: "Fiction", available: true },
+// ];
 
-let nextId = 6; // use this for any new book you create
+// let nextId = 6; // use this for any new book you create
 
 // routes --------------------------------------------
 // TODO: Workshop Part 4: one at a time, swap the array logic below for a real
@@ -52,11 +52,17 @@ app.get("/api/books", async (request, response, next) => {
 // Part 4: GET one book by id
 // TODO: Workshop: swap `.find()` for the Book method that looks up by primary key.
 // It returns null when nothing matches — your 404 check below still applies.
-app.get("/api/books/:id", async (request, response, next) => {
+app.get("/api/books/:bookId", async (request, response, next) => {
   try {
-    const id = Number(request.params.id); // request.params.id is always a string — Number() makes it comparable
+    const id = Number(request.params.bookId);
+    
+    ;
+     // request.params.id is always a string — Number() makes it comparable
     //get id requested
-    const book = await Book.findByPk(id)
+    const book = await Book.findByPk(id, 
+      {include: Review}
+    )
+    // const review = await Review.findByPk()
 
     if (!book) {
       return response.sendStatus(404);
@@ -74,7 +80,9 @@ app.get("/api/books/:id", async (request, response, next) => {
 app.post("/api/books", async (request, response, next) => {
   try {
     //no more temp array, sends to database
-    const newBook = await Book.create(request.body)
+    const newBook = await Book.create(request.body, request.params)
+
+    
     response.status(201).json(newBook);
   } catch (error) {
     next(error);
@@ -142,11 +150,11 @@ async function startApp() {
 
 
 
-db.authenticate().then(() => console.log("DB connected")).catch(console.error)
+await db.authenticate().then(() => console.log("DB connected")).catch(console.error)
 
 //from database connection, create the tables
-db.sync()
-
+ await db.sync();
+    console.log("Tables synced");
 
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
