@@ -77,13 +77,45 @@ app.get("/api/books/:bookId", async (request, response, next) => {
 // Part 5: POST a new book
 // TODO: Workshop: swap the manual id/push for the Book method that creates a row
 // directly from req.body. nextId goes away — the database assigns the id now.
+
+//searching for id from reviews, not book, thats why bookId and not Id
+
+
 app.post("/api/books", async (request, response, next) => {
   try {
-    //no more temp array, sends to database
-    const newBook = await Book.create(request.body, request.params)
+   
+    const newBook = await Book.create(request.body)
+                                      
 
-    
     response.status(201).json(newBook);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+
+
+
+app.post("/api/books/:bookId/reviews", async (request, response, next) => {
+  try {
+
+   
+    // const {
+    //   reviewer,
+    //   rating,
+    //   comment
+    // } = request.body
+
+    const {bookId} = request.params
+
+    // create row
+    //like request.body 
+    const review = await Review.create({...request.body, bookId
+    });
+                                    // reads, gets bookid
+
+    response.status(201).json(review);
   } catch (error) {
     next(error);
   }
